@@ -3,7 +3,7 @@ var https = require('https')
 var pem = require('pem')
 
 pem.config({
-  pathOpenSSL: 'c:/OpenSSL-Win64/bin/openssl.exe'
+  pathOpenSSL: 'E:/OpenSSL-Win64/bin/openssl.exe'
 })
 
 var app = express();
