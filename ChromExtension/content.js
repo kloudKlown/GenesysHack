@@ -12,20 +12,27 @@ let dom;
 
 var r = setInterval(function(){
     j.each(j('.webchat-conversation-footer'), function( index, value ) {
-        console.log("HACKATHON - FOUND CONVERSATION");
+        // console.log("HACKATHON - FOUND CONVERSATION");
 
         dom = j(this);
+        if (j(this).find('#test').length < 1)
+        {
 
-        j(this).append('<button id="test"> test </button>');
+        	j(this).append('<button id="test"> test </button>');
+
+
+        }
+
         
-        var but = j(this).find('#test')[0]
-        console.log(but);
-        window.thebutton = but;
-        //clearInterval(r);
+	        var but = j(this).find('#test')[0]
+	        // console.log(but);
+	        window.thebutton = but;
+	        //clearInterval(r);
 
-        but.addEventListener('click',function(){
-        	window.parent.postMessage({ startRecording: true }, '*');
-        });
+	        but.addEventListener('click',function(){
+	        	window.parent.postMessage({ startRecording: true }, '*');
+	        });
+        	
         clearInterval(r);       
     });
 }, 1000);

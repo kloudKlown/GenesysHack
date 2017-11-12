@@ -362,20 +362,6 @@
                    key.value = "YOUR_BING_SPEECH_API_KEY";
                }
             });
-            /*filePicker.addEventListener("change", function () {
-                Setup();
-                hypothesisDiv.innerHTML = "";
-                phraseDiv.innerHTML = "";
-                RecognizerStart(SDK, recognizer);
-                startBtn.disabled = true;
-                stopBtn.disabled = false;
-                filePicker.value = "";
-            });*/
-            /*stopBtn.addEventListener("click", function () {
-                RecognizerStop(SDK, recognizer);
-                startBtn.disabled = false;
-                stopBtn.disabled = true;
-            });*/
             Initialize(function (speechSdk) {
                 SDK = speechSdk;
                 startBtn.disabled = false;
@@ -411,7 +397,8 @@
             startBtn.disabled = false;
             console.log('Phrase captured', phraseDiv.innerHTML);
             const iframe = document.getElementsByTagName('iframe')[0];
-            iframe.contentWindow.postMessage({phrase: phraseDiv.innerHTML}, '*');
+            iframe.contentWindow
+            .postMessage({phrase: phraseDiv.innerHTML}, '*');
         }
 
         window.addEventListener("message",function(event){
