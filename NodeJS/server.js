@@ -22,12 +22,3 @@ pem.createCertificate({ days: 1, selfSigned: true }, function (err, keys) {
 
   https.createServer({ key: keys.serviceKey, cert: keys.certificate }, app).listen(3000)
 })
-
-
-
-
-// require ("./test/app.js")(app);
-
-// var port = process.env.PORT || 3000;
-
-// app.listen(port);
