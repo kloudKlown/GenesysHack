@@ -351,7 +351,6 @@
                 phraseDiv.innerHTML = "";
                 RecognizerStart(SDK, recognizer);
                 startBtn.disabled = true;
-                stopBtn.disabled = false;            
             });
             key.addEventListener("focus", function () {
                if (key.value == "YOUR_BING_SPEECH_API_KEY") {
@@ -409,6 +408,10 @@
             startBtn.disabled = false;
             //stopBtn.disabled = true;
         }
+
+        window.addEventListener("message",function(){
+            console.log(arguments);
+        })
 </script>
 </body>
 </html>
