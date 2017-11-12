@@ -402,22 +402,14 @@
         }*/
         function UpdateRecognizedPhrase(json) {
             //hypothesisDiv.innerHTML = "";
-
-            // phraseDiv.addEventListener('change', function(){
-            //     console.log(window);
-            // });
-
-
             phraseDiv.innerHTML += json + "\n";
             console.log(phraseDiv.innerHTML);
 
-            console.log(window);
-
-            window.postMessage('post message from Parent', '*');
-
+            // console.log(window)
         }
         function OnComplete() {
             startBtn.disabled = false;
+            window.postMessage(phraseDiv.innerHTML, '*');
 
             //stopBtn.disabled = true;
         }

@@ -14,26 +14,28 @@ var r = setInterval(function(){
 
         console.log(POC.$(this));
 
-        POC.$(this).append('<button> test </button>')
+
+        POC.$(this).append('<button id="test"> test </button>');
+        
+        var but = POC.$(this).find('#test')[0]
+        console.log(but);
+        window.thebutton = but;
+        //clearInterval(r);
+
+        but.addEventListener('click',function(){
+        	window.parent.postMessage('post message from Ext', '*');
+        });
 
         clearInterval(r);
-
-        // let conversation = [];
-        // POC.$(this).find('.chat-message ').each(function(){
-        //     let message = {};
-        //     var user = POC.$(this).find('.user-name').text()
-        //     message.user = user;
-        //     message.text = [];
-
-        //     POC.$(this).find('.message-container ').each(function(){
-        //         message.text.push(POC.$(this).text());
-        //     });
-
-        //     conversation.push(message);
-
-        // });
-
-        // console.log("HACKATHON", conversation);
-
+        
     });
+
+
 }, 1000);
+
+
+        window.addEventListener("message",function(){
+            console.log(arguments);
+            // var startBtn = document.getElementById("Record");
+            // startBtn.click();            
+        });
