@@ -1,17 +1,42 @@
 <!DOCTYPE html>
 <html>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 <head>
     <meta charset="utf-8">
-    <title>PureCloud Webchat Demo</title>
-
+    <title id="title">PureCloud VoiceEnabled_Webchat</title>
+    <link rel="stylesheet" type="text/css" href="WebStyle.css">
 </head>
 
 <body>
 <form id="chatForm">
-    <h3>Participant Information- local</h3>
+    <h3>Please Enter Your Information</h3>
+    <br/><br/><br/><br/>
+    <div class="col-md-4"> </div>
+<div class="row col-md-6">
+    <form>
+  <div>
+    <label class="col-md-4" for="">First Name:</label>
+    <input class="col-md-5" type="text" id="firstName" value="John"/>
+  </div>
+  <div>
+    <label  class="col-md-4" for="pwd">Last Name:</label>
+    <input  class="col-md-5" type="text" id="lastName" value="Doe"/>
+  </div>
+  <div >
+    <label  class="col-md-4">Email:</label>
+    <input  class="col-md-5" type="text" id="agentEmail" value="John.Doe@example.com">
+  </div>
 
-    <table class="webchat-config">
+  <div>
+    <button class="col-md-4" type="button" id="start" onclick="startEmbeddedChat()">Window Chat</button>
+    <button class="col-md-4" type="button" onclick="startPopupChat()">Pop-up Chat</button>
+  </div>
+  <!-- <button type="submit" class="btn btn-default">Submit</button> -->
+</form>
+</div>
+
+    <!-- <table class="webchat-config", style="text-align: center;">
         <tbody>
         <tr>
             <th>First Name:</th>
@@ -26,12 +51,10 @@
             <td><input type="text" id="agentEmail" value="John.Doe@example.com" /></td>
         </tr>
         </tbody>
-    </table>
+    </table> -->
 
-    <button type="button" id="start" onclick="startEmbeddedChat()">Start Embedded Chat</button>
-    <button type="button" onclick="startPopupChat()">Start Pop-up Chat</button>
+    
     <button type="button" id="Record" hidden="true">Record</button>
-    <button type="button" id="Send" hidden="true">Send</button>
     <!-- the api items -->
     <input id="key" type="text" size="40" value="4d7a7bba7e6944028d26db96bf51b0db" hidden="true">
     <input id="languageOptions" value="en-US"  hidden="true">
@@ -173,12 +196,10 @@
               //Code to run when chat ends.
             };
         });
-        var sendButton = document.getElementById("Send");
-        sendButton.hidden = false;
         var RecordButton = document.getElementById("Record");
         RecordButton.hidden = false;
         var textDis = document.getElementById("phraseDiv");
-        textDis.style = "display: inline-block;width:500px; height:200px";
+        textDis.style = "display: block;width:500px; height:200px";
         // setTimeout(function(){
         //     console.log("call this func");
         //     $('<button type="button" value = "Send" hidden="false"></button>').insertAfter('.webchat-conversation-footer');
@@ -317,7 +338,7 @@
 
 <!-- Browser Hooks -->
 <script>
-        var startBtn/*, stopBtn, hypothesisDiv*/, phraseDiv/*, statusDiv*/;
+        var startBtn/*, stopBtn, hypothesisDiv*/, phraseDiv;
         var key, languageOptions, formatOptions, recognitionMode, inputSource/*, filePicker*/;
         var SDK;
         var recognizer;
@@ -393,18 +414,16 @@
             //hypothesisDiv.innerHTML = "";
             phraseDiv.innerHTML += json + "\n";
             console.log(phraseDiv.innerHTML);
-
             // console.log(window)
         }
         function OnComplete() {
             startBtn.disabled = false;
             console.log('Phrase captured', phraseDiv.innerHTML);
             const iframe = document.getElementsByTagName('iframe')[0];
-            iframe.contentWindow
-            .postMessage({phrase: phraseDiv.innerHTML}, '*');
+            iframe.contentWindow.postMessage({phrase: phraseDiv.innerHTML}, '*');
         }
 
-        window.addEventListener("message",function(event){
+        window.addEventListener("message", function(event){
             console.log(arguments);
             if (event.data.startRecording) {
                var startBtn = document.getElementById("Record");
