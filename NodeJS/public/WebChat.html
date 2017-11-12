@@ -28,13 +28,32 @@
         </tbody>
     </table>
 
-    <button type="button" onclick="startEmbeddedChat()">Start Embedded Chat</button>
+    <button type="button" id="start" onclick="startEmbeddedChat()">Start Embedded Chat</button>
     <button type="button" onclick="startPopupChat()">Start Pop-up Chat</button>
+    <button type="button" id="Record" hidden="true">Record</button>
+    <button type="button" id="Send" hidden="true">Send</button>
+    <!-- the api items -->
+    <input id="key" type="text" size="40" value="4d7a7bba7e6944028d26db96bf51b0db" hidden="true">
+    <input id="languageOptions" value="en-US"  hidden="true">
+    <input id="recognitionMode" value="Interactive"  hidden="true">
+    <input id="formatOptions" value="Simple"  hidden="true">
+    <input id="inputSource" value="Mic"  hidden="true">
+    <!-- <button id="startBtn" disabled="disabled">Start</button>
+    <button id="stopBtn" disabled="disabled">Stop</button> -->
+    <textarea type="textarea" id="phraseDiv" style="display: none;"> </textarea>
+    
 </form>
 
-<div id="chatContainer" style="height:600px"></div>
+<div id="chatContainer" style="height:500px"></div>
 
 <script src="https://apps.mypurecloud.com/webchat/jsapi-v1.js" type="text/javascript"></script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+<!-- The SDK has a dependency on requirejs (http://requirejs.org/). -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.3/require.min.js"></script>
+<!-- SDK REFERENCE -->
+<script src="./speech.browser.sdk.js"></script>
 
 <script type="text/javascript">
 
@@ -140,6 +159,8 @@
                 containerEl: 'chatContainer'
             });
 
+
+
             webchat.chatStarted = function () {
               //Code to run when the chat is started
             };
@@ -152,6 +173,21 @@
               //Code to run when chat ends.
             };
         });
+        var sendButton = document.getElementById("Send");
+        sendButton.hidden = false;
+        var RecordButton = document.getElementById("Record");
+        RecordButton.hidden = false;
+        var textDis = document.getElementById("phraseDiv");
+        textDis.style = "display: inline-block;width:500px; height:200px";
+        // setTimeout(function(){
+        //     console.log("call this func");
+        //     $('<button type="button" value = "Send" hidden="false"></button>').insertAfter('.webchat-conversation-footer');
+        //     console.log($('#wc0-w2-footer'));
+        // }, 10000);
+        //$('.webchat-conversation-footer').after("<button type=\"button\" onclick=\"startPopupChat()\">Send</button>");
+        //var sendButton = $('<button type="button" id="Send" onclick="startPopupChat()"> Send </button>');
+        //$('.webchat-conversation-footer').append(sendButton);
+        //$('<button type="button" value = "Send"></button>').insertAfter('.webchat-conversation-footer')
     }
 
     function startPopupChat() {
@@ -184,5 +220,197 @@
     }
 </script>
 
+<!-- SDK USAGE -->
+<script>
+        // On document load resolve the SDK dependency
+        function Initialize(onComplete) {
+            require(["Speech.Browser.Sdk"], function(SDK) {
+                onComplete(SDK);
+            });
+        }
+        
+        // Setup the recognizer
+        function RecognizerSetup(SDK, recognitionMode, language, format, subscriptionKey) {
+            recognitionMode = SDK.RecognitionMode.Interactive;
+
+            var recognizerConfig = new SDK.RecognizerConfig(
+                new SDK.SpeechConfig(
+                    new SDK.Context(
+                        new SDK.OS(navigator.userAgent, "Browser", null),
+                        new SDK.Device("SpeechSample", "SpeechSample", "1.0.00000"))),
+                recognitionMode,
+                language, // Supported languages are specific to each recognition mode. Refer to docs.
+                format); // SDK.SpeechResultFormat.Simple (Options - Simple/Detailed)
+            // Alternatively use SDK.CognitiveTokenAuthentication(fetchCallback, fetchOnExpiryCallback) for token auth
+            var authentication = new SDK.CognitiveSubscriptionKeyAuthentication(subscriptionKey);
+            return SDK.CreateRecognizer(recognizerConfig, authentication);
+        
+            /*var files = document.getElementById('filePicker').files;
+            if (!files.length) {
+                return SDK.CreateRecognizer(recognizerConfig, authentication);
+            } else {
+                return SDK.CreateRecognizerWithFileAudioSource(recognizerConfig, authentication, files[0]);
+            }*/
+        }
+        // Start the recognition
+        function RecognizerStart(SDK, recognizer) {
+            recognizer.Recognize((event) => {
+                /*
+                 Alternative syntax for typescript devs.
+                 if (event instanceof SDK.RecognitionTriggeredEvent)
+                */
+                switch (event.Name) {
+                    // case "RecognitionTriggeredEvent" :
+                    //     UpdateStatus("Initializing");
+                    //     break;
+                    // case "ListeningStartedEvent" :
+                    //     UpdateStatus("Listening");
+                    //     break;
+                    // case "RecognitionStartedEvent" :
+                    //     UpdateStatus("Listening_Recognizing");
+                    //     break;
+                    case "SpeechStartDetectedEvent" :
+                        //UpdateStatus("Listening_DetectedSpeech_Recognizing");
+                        console.log(JSON.stringify(event.Result)); // check console for other information in result
+                        break;
+                    case "SpeechHypothesisEvent" :
+                        //UpdateRecognizedHypothesis(event.Result.Text, false);
+                        console.log(JSON.stringify(event.Result)); // check console for other information in result
+                        break;
+                    case "SpeechFragmentEvent" :
+                        //UpdateRecognizedHypothesis(event.Result.Text, true);
+                        console.log(JSON.stringify(event.Result)); // check console for other information in result
+                        break;
+                    case "SpeechEndDetectedEvent" :
+                        //OnSpeechEndDetected();
+                        //UpdateStatus("Processing_Adding_Final_Touches");
+                        console.log(JSON.stringify(event.Result)); // check console for other information in result
+                        break;
+                    case "SpeechSimplePhraseEvent" :
+                        UpdateRecognizedPhrase(JSON.stringify(event.Result.DisplayText, null, 3));
+                        break;
+                    case "SpeechDetailedPhraseEvent" :
+                        UpdateRecognizedPhrase(JSON.stringify(event.Result, null, 3));
+                        break;
+                    case "RecognitionEndedEvent" :
+                        OnComplete();
+                        //UpdateStatus("Idle");
+                        console.log(JSON.stringify(event)); // Debug information
+                        break;
+                    default:
+                        console.log(JSON.stringify(event)); // Debug information
+                }
+            })
+            .On(() => {
+                // The request succeeded. Nothing to do here.
+            },
+            (error) => {
+                console.error(error);
+            });
+        }
+        // Stop the Recognition.
+        function RecognizerStop(SDK, recognizer) {
+            // recognizer.AudioSource.Detach(audioNodeId) can be also used here. (audioNodeId is part of ListeningStartedEvent)
+            recognizer.AudioSource.TurnOff();
+        }
+</script>
+
+<!-- Browser Hooks -->
+<script>
+        var startBtn/*, stopBtn, hypothesisDiv*/, phraseDiv/*, statusDiv*/;
+        var key, languageOptions, formatOptions, recognitionMode, inputSource/*, filePicker*/;
+        var SDK;
+        var recognizer;
+        var previousSubscriptionKey;
+        document.addEventListener("DOMContentLoaded", function () {
+            //createBtn = document.getElementById("createBtn");
+            startBtn = document.getElementById("Record");
+            //stopBtn = document.getElementById("stopBtn");
+            phraseDiv = document.getElementById("phraseDiv");
+            //hypothesisDiv = document.getElementById("hypothesisDiv");
+            //statusDiv = document.getElementById("statusDiv");
+            key = document.getElementById("key");
+            languageOptions = document.getElementById("languageOptions");
+            formatOptions = document.getElementById("formatOptions");
+            inputSource = document.getElementById("inputSource");
+            recognitionMode = document.getElementById("recognitionMode");
+            //filePicker = document.getElementById('filePicker');
+            //languageOptions.addEventListener("change", Setup);
+            //formatOptions.addEventListener("change", Setup);
+            //recognitionMode.addEventListener("change", Setup);
+            startBtn.addEventListener("click", function () {
+                if (key.value == "" || key.value == "YOUR_BING_SPEECH_API_KEY") {
+                    alert("Please enter your Bing Speech subscription key!");
+                    return;
+                }
+                if (!recognizer || previousSubscriptionKey != key.value) {
+                        previousSubscriptionKey = key.value;
+                        Setup();
+                    }
+                //hypothesisDiv.innerHTML = "";
+                phraseDiv.innerHTML = "";
+                RecognizerStart(SDK, recognizer);
+                startBtn.disabled = true;
+                stopBtn.disabled = false;            
+            });
+            key.addEventListener("focus", function () {
+               if (key.value == "YOUR_BING_SPEECH_API_KEY") {
+                   key.value = "";
+               }
+            });
+            key.addEventListener("focusout", function () {
+               if (key.value == "") {
+                   key.value = "YOUR_BING_SPEECH_API_KEY";
+               }
+            });
+            /*filePicker.addEventListener("change", function () {
+                Setup();
+                hypothesisDiv.innerHTML = "";
+                phraseDiv.innerHTML = "";
+                RecognizerStart(SDK, recognizer);
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                filePicker.value = "";
+            });*/
+            /*stopBtn.addEventListener("click", function () {
+                RecognizerStop(SDK, recognizer);
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            });*/
+            Initialize(function (speechSdk) {
+                SDK = speechSdk;
+                startBtn.disabled = false;
+            });
+        });
+        function Setup() {
+            recognizer = RecognizerSetup(SDK, recognitionMode.value, languageOptions.value, SDK.SpeechResultFormat[formatOptions.value], key.value);
+        }
+        /*function UpdateStatus(status) {
+            statusDiv.innerHTML = status;
+        }*/
+        /*function UpdateRecognizedHypothesis(text, append) {
+            if (append) 
+                hypothesisDiv.innerHTML += text + " ";
+            else 
+                hypothesisDiv.innerHTML = text;
+            var length = hypothesisDiv.innerHTML.length;
+            if (length > 403) {
+                hypothesisDiv.innerHTML = "..." + hypothesisDiv.innerHTML.substr(length-400, length);
+            }
+        }*/
+        /*function OnSpeechEndDetected() {
+            stopBtn.disabled = true;
+        }*/
+        function UpdateRecognizedPhrase(json) {
+            //hypothesisDiv.innerHTML = "";
+            phraseDiv.innerHTML += json + "\n";
+        }
+        function OnComplete() {
+            startBtn.disabled = false;
+            //stopBtn.disabled = true;
+        }
+
+        
+</script>
 </body>
 </html>
