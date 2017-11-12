@@ -409,15 +409,18 @@
         }
         function OnComplete() {
             startBtn.disabled = false;
-            window.postMessage(phraseDiv.innerHTML, '*');
-
-            //stopBtn.disabled = true;
+            console.log('Phrase captured', phraseDiv.innerHTML);
+            const iframe = document.getElementsByTagName('iframe')[0];
+            iframe.contentWindow.postMessage({phrase: phraseDiv.innerHTML}, '*');
         }
 
-        window.addEventListener("message",function(){
+        window.addEventListener("message",function(event){
             console.log(arguments);
-            var startBtn = document.getElementById("Record");
-            startBtn.click();            
+            if (event.data.startRecording) {
+               var startBtn = document.getElementById("Record");
+                startBtn.click(); 
+            }
+
         });
 
 
