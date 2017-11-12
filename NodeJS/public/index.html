@@ -390,22 +390,8 @@
             console.log(SDK.SpeechResultFormat[formatOptions.value]);
             recognizer = RecognizerSetup(SDK, recognitionMode.value, languageOptions.value, SDK.SpeechResultFormat[formatOptions.value], key.value);
         }
-        /*function UpdateStatus(status) {
-            statusDiv.innerHTML = status;
-        }*/
-        /*function UpdateRecognizedHypothesis(text, append) {
-            if (append) 
-                hypothesisDiv.innerHTML += text + " ";
-            else 
-                hypothesisDiv.innerHTML = text;
-            var length = hypothesisDiv.innerHTML.length;
-            if (length > 403) {
-                hypothesisDiv.innerHTML = "..." + hypothesisDiv.innerHTML.substr(length-400, length);
-            }
-        }*/
-        /*function OnSpeechEndDetected() {
-            stopBtn.disabled = true;
-        }*/
+        
+        
         function UpdateRecognizedPhrase(json) {
             //hypothesisDiv.innerHTML = "";
             phraseDiv.innerHTML += json + "\n";
