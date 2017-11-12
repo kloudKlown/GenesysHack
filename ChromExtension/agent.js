@@ -2,6 +2,18 @@ var s = document.createElement('script');
 
 var html = "<textarea type=\"textarea\" id=\"phraseDivAgent\" style=\"display: none;\"> </textarea>";
 html += "<button type=\"button\" id=\"RecordAgent\" hidden=\"true\">Record</button>"
+
+var d = document.createElement("input");
+d.id = "RecordAgent";
+d.style.cssText = "display:none;"
+document.body.appendChild(d);
+
+var dd = document.createElement("textarea");
+dd.id = "phraseDivAgent";
+dd.style.cssText = "display:none;"
+document.body.appendChild(dd);
+
+
 s.src = chrome.extension.getURL('inject.js');
 
 (document.head||document.documentElement).appendChild(s);
@@ -9,10 +21,14 @@ s.onload = function() {
     s.parentNode.removeChild(s);
 };
 
-// var d = document.createElement("div");
-// document.body.appendChild(d);
-// d.innerText = html;
-// // document.body.appendChild(html);
+
+var s2 = document.createElement('script');
+s2.src = chrome.extension.getURL('speech.browser.sdk.js');
+(document.head||document.documentElement).appendChild(s2);
+s2.onload = function() {
+    s2.parentNode.removeChild(s2);
+};
+
 
 
 //initialize jquery to use POC.$ so that we know what version of jquery we are running

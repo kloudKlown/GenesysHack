@@ -322,6 +322,7 @@
         var SDK;
         var recognizer;
         var previousSubscriptionKey;
+        
         document.addEventListener("DOMContentLoaded", function () {
             //createBtn = document.getElementById("createBtn");
             startBtn = document.getElementById("Record");
@@ -364,10 +365,12 @@
             });
             Initialize(function (speechSdk) {
                 SDK = speechSdk;
+                console.log(SDK)
                 startBtn.disabled = false;
             });
         });
         function Setup() {
+            console.log(SDK.SpeechResultFormat[formatOptions.value]);
             recognizer = RecognizerSetup(SDK, recognitionMode.value, languageOptions.value, SDK.SpeechResultFormat[formatOptions.value], key.value);
         }
         /*function UpdateStatus(status) {

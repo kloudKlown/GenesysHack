@@ -9,11 +9,11 @@
  	// "matches": ["https://www.google.ca/*"],
 	 "matches": ["*://*/*"],
  	 "css": ["main.css"],
- 	 "js": ["jquery-1.6.1.min.js", "content.js", "agent.js"],
+ 	 "js": ["jquery-1.6.1.min.js", "content.js", "agent.js", "require.js"],
  	 "all_frames": true
 
  }],
-    "web_accessible_resources": ["inject.js"],
+    "web_accessible_resources": ["inject.js", "speech.browser.sdk.js"],
 
  "permissions": [
     "tabs",
