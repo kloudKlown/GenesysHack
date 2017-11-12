@@ -402,16 +402,33 @@
         }*/
         function UpdateRecognizedPhrase(json) {
             //hypothesisDiv.innerHTML = "";
+
+            // phraseDiv.addEventListener('change', function(){
+            //     console.log(window);
+            // });
+
+
             phraseDiv.innerHTML += json + "\n";
+            console.log(phraseDiv.innerHTML);
+
+            console.log(window);
+
+            window.postMessage('post message from Parent', '*');
+
         }
         function OnComplete() {
             startBtn.disabled = false;
+
             //stopBtn.disabled = true;
         }
 
         window.addEventListener("message",function(){
             console.log(arguments);
-        })
+            var startBtn = document.getElementById("Record");
+            startBtn.click();            
+        });
+
+
 </script>
 </body>
 </html>
