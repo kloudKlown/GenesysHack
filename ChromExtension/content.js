@@ -16,20 +16,20 @@ var r = setInterval(function(){
 
     dom = j(this);
     if (j(this).find('#Recode').length < 1){
-        j(this).append('<button id="Recode"> Recode </button>');
+        j(this).append('<button style="background-color:#2B8CBE; color:black;" id="Recode" class="btn btn-primary"> Record </button>');
     }
     // if (j(this).find('#Send').length < 1) {
     //     j(this).append('<button id="Send", disabled = "true"> Send </button>');
     // }
-	var reco = j(this).find('#Recode')[0];
-	// console.log(but);
-	//window.thebutton = but;
-	//clearInterval(r);
+    var reco = j(this).find('#Recode')[0];
+    // console.log(but);
+    //window.thebutton = but;
+    //clearInterval(r);
     //var snd = j(this).find('#Send')[0];
-	reco.addEventListener('click',function(){
+    reco.addEventListener('click',function(){
         reco.disabled = true;
         window.parent.postMessage({ startRecording: true}, '*');
-	});
+    });
     // snd.addEventListener('click',function(){
     //     var textArea = document.getElementsByTagName('textarea')[0];
     //     //var textArea = document.querySelector("textarea");
@@ -50,11 +50,11 @@ var r = setInterval(function(){
 
 
 
-	 window.addEventListener("message",function(event){
-	 	if (event.data.phrase) {
-        	console.log('got message from parent frame', arguments);
-        	const textArea = document.getElementsByTagName('textarea')[0];
-        	textArea.value = event.data.phrase;
+     window.addEventListener("message",function(event){
+        if (event.data.phrase) {
+            console.log('got message from parent frame', arguments);
+            const textArea = document.getElementsByTagName('textarea')[0];
+            textArea.value = event.data.phrase;
             //var reco = j(this).find('#Recode')[0];
             //var snd = j(this).find('#Send')[0];
             var reco = document.getElementById('Recode');
@@ -63,7 +63,7 @@ var r = setInterval(function(){
             // console.log(snd);
             reco.disabled = false;
             //snd.disabled = false;
-        	//j(textArea).trigger('keydown')
+            //j(textArea).trigger('keydown')
         }
 
     });
